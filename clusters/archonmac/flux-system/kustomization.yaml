@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- ../../iac/environments/dev2
+- ../../../iac/environments/dev2
 patchesStrategicMerge:
   - flux-system/patch-kustomization-decryption.yaml
   - flux-system/patch-kustomize-env.yaml

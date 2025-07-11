@@ -78,4 +78,7 @@ spec:
                   key: AWS_DEFAULT_REGION
 
 ```
-та комітемо зміни у master
+та комітемо зміни у master і запускаємо позачергову реконсиляцію
+```shell
+    flux reconcile kustomization flux-system --with-source 
+```
