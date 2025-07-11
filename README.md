@@ -26,10 +26,10 @@ https://fluxcd.io/flux/installation/bootstrap/github/#github-deploy-keys
 3. Налаштування разшифрування секретів, зашифрованих sops та aws kms
 додаєм до clusters/archonmac/flux-system/kustomization.yaml
 ```text
- - ../../iac/environments/dev2
+- ../../../iac/environments/dev2
 patchesStrategicMerge:
-  - flux-system/patch-kustomization-decryption.yaml
-  - flux-system/patch-kustomize-env.yaml
+  - patch-kustomization-decryption.yaml
+  - patch-kustomize-env.yaml
 ```
 створюємо 2 нових файла в clusters/archonmac/flux-system
 patch-kustomization-decryption.yaml
