@@ -4,6 +4,6 @@ metadata:
   name: kbot-src
 spec:
   interval: 5m
-  url: https://github.com/den-vasyliev/kbot.git
+  url: https://github.com/faatevalex/go-demo-app.git
   ref:
-    branch: "demo/sops"
+    branch: "main"
