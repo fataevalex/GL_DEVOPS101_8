@@ -109,3 +109,11 @@ EOF
   - ../../apps/kbot-otel
 ```
 комітемо та пушаємо зроблені зміни
+виконуємо path для додавання змінної METRICS_HOST. Без неї kbot-otel не працює
+```shell
+   kubectl apply -f iac/apps/kbot-otel/patch-env.yaml 
+```
+Дивимось логи бота
+```shell
+   kubectl logs -f  -l app.kubernetes.io/name=kbot -n kbot-otel-flux
+```
