@@ -6,4 +6,4 @@ spec:
   interval: 5m
   url: https://github.com/den-vasyliev/kbot.git
   ref:
-    branch: main
+    branch: "demo/sops"
