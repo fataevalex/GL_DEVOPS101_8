@@ -1,0 +1,14 @@
+# Пример манифеста для пода (или Deployment'а) с аннотацией
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube2iam-debug-pod
+  namespace: kube-system
+  annotations:
+    iam.amazonaws.com/role: arn:aws:iam::682364461498:role/sops-kms-role # <-- ЭТО ВАЖНО
+spec:
+  containers:
+    - name: debug-container
+      image: curlimages/curl:latest # Или любой образ с curl
+      command: ["sleep", "3600"] # Чтобы под не завершался сразу
+      # ...

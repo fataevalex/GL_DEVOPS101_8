@@ -1,0 +1,8 @@
+# clusters/my-k3s-cluster/flux-system/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - serviceaccount.yaml
+  - daemonset.yaml
+  - service.yaml
+#  - debug-pod.yaml
