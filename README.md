@@ -1,6 +1,6 @@
 #  SOPS-KMS-FLUX
-### terraform bootstrap flux
-1. Встановлюємо flux в kubernetges кластер зі схемою monorepo.
+
+### 1. Встановлюємо flux в kubernetges кластер за схемою monorepo.(вважаєм кластер вже готовий)
    Репозиторій flux тий самий що і для додатків
    Треба підготувати kubeconfig та 
 ```shell
@@ -13,7 +13,7 @@
 If you want to use an existing repository, the PAT’s user must have admin permissions.
 https://fluxcd.io/flux/installation/bootstrap/github/#github-deploy-keys
 
-2. Створення секрета для доступу до aws kms за допомогую IAM юзера
+### 2. Створення секрета для доступу до aws kms за допомогую IAM юзера
 ```shell
     export AWS_DEFAULT_REGION=
     export AWS_ACCESS_KEY_ID=
@@ -23,7 +23,7 @@ https://fluxcd.io/flux/installation/bootstrap/github/#github-deploy-keys
    
     bash iac/scripts/kube2iam-create-secret.sh
 ```
-3. Налаштування разшифрування секретів, зашифрованих sops та aws kms
+### 3. Налаштування можливості разшифрування секретів в кластері, зашифрованих sops-ом та aws kms-ом
 додаєм до clusters/archonmac/flux-system/kustomization.yaml
 ```text
 - ../../../iac/environments/dev2
@@ -82,3 +82,30 @@ spec:
 ```shell
     flux reconcile kustomization flux-system --with-source 
 ```
+
+### 4. Готуємо секрет для kbot
+створемо конфігурацію для sops 
+```text
+cat <<EOF > .sops.yaml
+creation_rules:
+  - kms: "arn:aws:kms:eu-west-1:<AWS ACCOUNT ID>:key/<KMS_KEY_ID>"
+    encrypted_regex: "^(data|stringData)$"
+    path_regex: ".*secret.*\\.yaml$"
+EOF
+```
+і сгенеруємо сам секрет
+```shell
+   export TELETOKEN=<значення токена для телеграм бота>
+   kubectl create secret generic kbot --from-literal=token=${TELETOKEN} --dry-run=client -o yaml > iac/apps/kbot-otel/secret.sops.yaml
+```
+де XXX токен тееграм бота
+далі шифруємо отриманий файл sops-ом (змінні середовища AWS_... для доступа KMS повинні бути встановлені)
+```shell
+    sops -e -i iac/apps/kbot-otel/secret.sops.yaml
+```
+
+### 5 Включаемо розгортання kbot в iac/environments/dev2/kustomization.yaml. Додаємо рядок
+```text
+  - ../../apps/kbot-otel
+```
+комітемо та пушаємо зроблені зміни
