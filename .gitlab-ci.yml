@@ -1,0 +1,14 @@
+stages:
+  - security
+
+gitleaks_scan:
+  image: zricethezav/gitleaks:latest
+  stage: security
+  script:
+    - gitleaks detect --source . --report-format sarif --report-path gitleaks.sarif --exit-code 1
+  artifacts:
+    paths:
+      - gitleaks.sarif
+    reports:
+      dotenv: gitleaks.sarif
+  allow_failure: false
