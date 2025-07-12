@@ -26,6 +26,9 @@ sudo mv gitleaks /usr/local/bin
  ```bash
 git config core.hooksPath .githooks
 chmod +x .githooks/pre-commit
+
+git config core.hooksPath .githooks
+chmod +x .githooks/pre-push
 ```  
  Це потрібно виконати лише один раз після клонування.
 
