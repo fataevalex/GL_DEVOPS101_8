@@ -35,9 +35,10 @@ def run_gitleaks_scan():
         print("Gitleaks detected potential secrets!")
         print(f"SARIF report saved at: {report_path}")
         print("You can open it in VSCode with the SARIF Viewer extension.")
+        return 1
     else:
         print("Gitleaks: no secrets found.")
-    return 0
+        return 0
 
 def main():
     if not is_gitleaks_installed():
