@@ -1,0 +1,15 @@
+image: python:3.11
+
+pipelines:
+  default:
+    - step:
+        name: Gitleaks Scan
+        caches:
+          - docker
+        script:
+          - apt-get update && apt-get install -y curl unzip
+          - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_linux_x64.tar.gz | tar -xz
+          - mv gitleaks /usr/local/bin/
+          - gitleaks detect --source . --report-format sarif --report-path gitleaks.sarif --exit-code 1
+        artifacts:
+          - gitleaks.sarif

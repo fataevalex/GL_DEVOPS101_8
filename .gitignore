@@ -26,4 +26,5 @@ terraform.tfplan
 #aws ключи в csv файлах
 *accessKeys.csv
 *unencrypted.yaml
+.gitleaks/
 

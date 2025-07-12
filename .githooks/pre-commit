@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+from pathlib import Path
+
+def is_gitleaks_installed():
+    try:
+        subprocess.run(["gitleaks", "version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        return True
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return False
+
+def run_gitleaks_scan():
+    report_dir = Path(".gitleaks")
+    report_dir.mkdir(exist_ok=True)
+    report_path = report_dir / "gitleaks-report.sarif"
+    patch_path = report_dir  /  "staged.diff"
+
+    # Save staged diff
+    with open(patch_path, "w") as f:
+        subprocess.run(["git", "diff", "--cached"], stdout=f)
+
+    result = subprocess.run(
+        [
+            "gitleaks", "detect",
+            "--report-format", "sarif",
+            "--report-path", str(report_path),
+            "--exit-code", "1"
+       ],
+        capture_output=True,
+        text=True
+    )
+
+    if result.returncode != 0:
+        print("Gitleaks detected potential secrets!")
+        print(f"SARIF report saved at: {report_path}")
+        print("You can open it in VSCode with the SARIF Viewer extension.")
+        return 1
+    else:
+        print("Gitleaks: no secrets found.")
+        return 0
+
+def main():
+    if not is_gitleaks_installed():
+        print("Warning: Gitleaks is not installed. Skipping secret scan.")
+        return 0  # Do not block commit
+
+    return run_gitleaks_scan()
+
+if __name__ == "__main__":
+    sys.exit(main())
